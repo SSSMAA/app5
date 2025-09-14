@@ -8,6 +8,11 @@ export default defineConfig(({ mode }) => {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
       },
+      server: {
+        allowedHosts: [
+          '5173-ib4cqutz55hxrhkz64xl2-6532622b.e2b.dev'
+        ]
+      },
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),

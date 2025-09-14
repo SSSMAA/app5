@@ -371,8 +371,15 @@ CREATE POLICY "Admins, Directors, and Head Trainers can manage students" ON publ
 FOR ALL USING (get_user_role() IN ('ADMIN', 'DIRECTOR', 'HEAD_TRAINER')) WITH CHECK (get_user_role() IN ('ADMIN', 'DIRECTOR', 'HEAD_TRAINER'));
 
 -- Agents can create, read, and update students, but not delete them.
-CREATE POLICY "Agents can manage students (no delete)" ON public.students
-FOR SELECT, INSERT, UPDATE USING (get_user_role() = 'AGENT') WITH CHECK (get_user_role() = 'AGENT');
+-- Agents can view, insert, and update students, but not delete them.
+CREATE POLICY "Agents can view students" ON public.students
+FOR SELECT USING (get_user_role() = 'AGENT');
+
+CREATE POLICY "Agents can insert students" ON public.students
+FOR INSERT WITH CHECK (get_user_role() = 'AGENT');
+
+CREATE POLICY "Agents can update students" ON public.students
+FOR UPDATE USING (get_user_role() = 'AGENT') WITH CHECK (get_user_role() = 'AGENT');
 
 -- Teachers can only view students assigned to their groups or directly to them.
 CREATE POLICY "Teachers can view their students" ON public.students
@@ -401,8 +408,14 @@ CREATE POLICY "Admins and Directors can manage payments" ON public.payments
 FOR ALL USING (get_user_role() IN ('ADMIN', 'DIRECTOR')) WITH CHECK (get_user_role() IN ('ADMIN', 'DIRECTOR'));
 
 -- Agents can create, view, and update payments as per frontend requirements.
-CREATE POLICY "Agents can manage payments" ON public.payments
-FOR SELECT, INSERT, UPDATE USING (get_user_role() = 'AGENT') WITH CHECK (get_user_role() = 'AGENT');
+CREATE POLICY "Agents can view payments" ON public.payments
+FOR SELECT USING (get_user_role() = 'AGENT');
+
+CREATE POLICY "Agents can insert payments" ON public.payments
+FOR INSERT WITH CHECK (get_user_role() = 'AGENT');
+
+CREATE POLICY "Agents can update payments" ON public.payments
+FOR UPDATE USING (get_user_role() = 'AGENT') WITH CHECK (get_user_role() = 'AGENT');
 
 -- -------------------------------------------------
 -- Table: attendance
@@ -414,12 +427,18 @@ CREATE POLICY "Admins, Directors, and Head Trainers can manage attendance" ON pu
 FOR ALL USING (get_user_role() IN ('ADMIN', 'DIRECTOR', 'HEAD_TRAINER')) WITH CHECK (get_user_role() IN ('ADMIN', 'DIRECTOR', 'HEAD_TRAINER'));
 
 -- Agents can record and view attendance (e.g., for trial sessions).
-CREATE POLICY "Agents can record and view attendance" ON public.attendance
-FOR SELECT, INSERT USING (get_user_role() = 'AGENT') WITH CHECK (get_user_role() = 'AGENT');
+CREATE POLICY "Agents can view attendance" ON public.attendance
+FOR SELECT USING (get_user_role() = 'AGENT');
+
+CREATE POLICY "Agents can insert attendance" ON public.attendance
+FOR INSERT WITH CHECK (get_user_role() = 'AGENT');
 
 -- Teachers can take and view attendance for their own groups.
-CREATE POLICY "Teachers can manage attendance for their groups" ON public.attendance
-FOR SELECT, INSERT USING (get_user_role() = 'TEACHER' AND group_id IN (SELECT id FROM public.group_classes WHERE teacher_id = auth.uid())) WITH CHECK (group_id IN (SELECT id FROM public.group_classes WHERE teacher_id = auth.uid()));
+CREATE POLICY "Teachers can view attendance for their groups" ON public.attendance
+FOR SELECT USING (get_user_role() = 'TEACHER' AND group_id IN (SELECT id FROM public.group_classes WHERE teacher_id = auth.uid()));
+
+CREATE POLICY "Teachers can insert attendance for their groups" ON public.attendance
+FOR INSERT WITH CHECK (get_user_role() = 'TEACHER' AND group_id IN (SELECT id FROM public.group_classes WHERE teacher_id = auth.uid()));
 
 -- -------------------------------------------------
 -- Table: expenses
@@ -431,8 +450,11 @@ CREATE POLICY "Admins and Directors can manage all expenses" ON public.expenses
 FOR ALL USING (get_user_role() IN ('ADMIN', 'DIRECTOR')) WITH CHECK (get_user_role() IN ('ADMIN', 'DIRECTOR'));
 
 -- Marketers can add and view expenses in the 'Marketing' category.
-CREATE POLICY "Marketers can manage marketing expenses" ON public.expenses
-FOR SELECT, INSERT USING (get_user_role() = 'MARKETER' AND category = 'Marketing') WITH CHECK (get_user_role() = 'MARKETER' AND category = 'Marketing');
+CREATE POLICY "Marketers can view marketing expenses" ON public.expenses
+FOR SELECT USING (get_user_role() = 'MARKETER' AND category = 'Marketing');
+
+CREATE POLICY "Marketers can insert marketing expenses" ON public.expenses
+FOR INSERT WITH CHECK (get_user_role() = 'MARKETER' AND category = 'Marketing');
 
 -- -------------------------------------------------
 -- Table: inventory_items
