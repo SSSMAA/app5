@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: ischoolgo-management
+    env: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_SUPABASE_URL
+        value: https://rlvlvcwehcbqvxjwoqhq.supabase.co
+      - key: VITE_SUPABASE_ANON_KEY  
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsdmx2Y3dlaGNicXZ4andvcWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4Njc4NTMsImV4cCI6MjA3MzQ0Mzg1M30.8lwuGi_XD4digdJqBOoMIqEUfHNE9SYg1OIWWVALvHI
+    routes:
+      - type: redirect
+        source: /*
+        destination: /index.html
