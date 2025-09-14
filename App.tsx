@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Role, Lead, Visitor, Student, Payment, Attendance, Teacher, GroupClass, Expense, Campaign, Report, InventoryItem, Applicant, User, Notification } from './types';
 import { ROLES } from './constants';
 import { mockLeads, mockVisitors, mockStudents, mockPayments, mockAttendance, mockTeachers, mockGroupClasses, mockExpenses, mockCampaigns, mockReports, mockInventory, mockApplicants, mockUsers } from './data/mockData';
+import { useAuth } from './contexts/AuthContext';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import AdminView from './views/AdminView';
@@ -16,7 +17,7 @@ import AIView from './views/AIView';
 import LoginView from './views/LoginView';
 
 const App: React.FC = () => {
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const { user: loggedInUser, loading, signIn, signOut } = useAuth();
   const [activeView, setActiveView] = useState<Role | null>(null);
 
   // Centralized state for all application data
@@ -131,18 +132,12 @@ const App: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [students, groupClasses]);
 
-  const handleLogin = (username: string, password?: string): boolean => {
-    // In a real app, you'd check the password too.
-    const user = users.find(u => u.username === username);
-    if (user) {
-      setLoggedInUser(user);
-      return true;
-    }
-    return false;
+  const handleLogin = async (username: string, password?: string): Promise<boolean> => {
+    return await signIn(username, password);
   };
 
-  const handleLogout = () => {
-    setLoggedInUser(null);
+  const handleLogout = async () => {
+    await signOut();
   };
 
   const renderView = () => {
@@ -234,6 +229,17 @@ const App: React.FC = () => {
         return <div className="text-center p-8">دور غير معروف. يرجى تسجيل الخروج والمحاولة مرة أخرى.</div>;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-lg">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!loggedInUser) {
     return <LoginView onLogin={handleLogin} />;
