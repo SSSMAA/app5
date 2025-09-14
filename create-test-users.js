@@ -66,6 +66,7 @@ async function createTestUsers() {
       const { data, error } = await supabase.auth.admin.createUser({
         email: user.email,
         password: user.password,
+        email_confirm: true, // Auto-confirm email
         user_metadata: {
           full_name: user.full_name,
           username: user.username,
