@@ -1,5 +1,5 @@
 {
-  "name": "ISCHOOLGO-v4",
+  "name": "ISCHOOLGO-v5",
   "description": "A comprehensive dashboard for managing ISCHOOLGO operations, including roles for Admin, Director, Marketer, Head Trainer, Agent, and Teacher.",
   "requestFramePermissions": [
     "camera"
