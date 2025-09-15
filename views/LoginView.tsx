@@ -1,29 +1,20 @@
 import React, { useState } from 'react';
 
 interface LoginViewProps {
-    onLogin: (username: string, password?: string) => Promise<boolean>;
+    onLogin: (username: string, password?: string) => boolean;
 }
 
 const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setLoading(true);
-        
-        try {
-            const success = await onLogin(username, password);
-            if (!success) {
-                setError('اسم المستخدم أو كلمة المرور غير صحيحة.');
-            }
-        } catch (err) {
-            setError('حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.');
-        } finally {
-            setLoading(false);
+        const success = onLogin(username, password);
+        if (!success) {
+            setError('اسم المستخدم أو كلمة المرور غير صحيحة.');
         }
     };
 
@@ -33,11 +24,6 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <div className="text-center">
                     <h1 className="text-4xl font-bold text-indigo-600">ISCHOOLGO</h1>
                     <p className="mt-2 text-gray-500">مرحباً بعودتك! يرجى تسجيل الدخول للمتابعة.</p>
-                    <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
-                        <p className="font-semibold">حسابات تجريبية متاحة:</p>
-                        <p>admin | director | marketer | headtrainer | agent | teacher</p>
-                        <p>كلمة المرور لجميع الحسابات: password123</p>
-                    </div>
                 </div>
                 <form className="space-y-6" onSubmit={handleSubmit}>
                     <div>
@@ -76,10 +62,9 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                     <div>
                         <button
                             type="submit"
-                            disabled={loading}
-                            className="w-full py-3 mt-4 font-bold text-white uppercase bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-3 mt-4 font-bold text-white uppercase bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
-                            {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+                            تسجيل الدخول
                         </button>
                     </div>
                 </form>
