@@ -67,11 +67,9 @@ const App: React.FC = () => {
     };
   }, []);
 
-  // This notification logic is for frontend demonstration.
-  // The primary notification generation is now handled by the backend Edge Function.
-  useEffect(() => {
-    // ... (notification logic remains the same as before)
-  }, [students, groupClasses]);
+  // The frontend notification logic has been removed.
+  // This is now handled by the 'generate-notifications' Edge Function on the backend,
+  // and notifications will be fetched from the database in a real implementation.
 
   const handleLogin = async (email: string, password?: string): Promise<boolean> => {
     if (!password) return false;
@@ -111,7 +109,7 @@ const App: React.FC = () => {
       case 'TEACHER':
         return <TeacherView allGroups={groupClasses} setAllGroups={setGroupClasses} allStudents={students} setAllStudents={setStudents} visitors={visitors} attendance={attendance} setAttendance={setAttendance} reports={reports} setReports={setReports} loggedInUser={loggedInUser} />;
       case 'REPORTS':
-        return <ReportsView attendance={attendance} students={students} teachers={teachers} groupClasses={group_classes} leads={leads} users={[]} campaigns={campaigns} />;
+        return <ReportsView attendance={attendance} students={students} teachers={teachers} groupClasses={groupClasses} leads={leads} users={[]} campaigns={campaigns} />;
       case 'AI_INSIGHTS':
         return <AIView students={students} payments={payments} attendance={attendance} leads={leads} expenses={expenses} campaigns={campaigns} />;
       case 'SETTINGS':
